@@ -1,0 +1,99 @@
+<style>
+    .col-icon { width: 30px; }
+    .col-size { width: 100px; }
+    .col-buttons { width: 200px; }
+</style>
+    <div class="row panel">
+        <button type="button" class="btn btn-primary btn-mkdir"><span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>&nbsp;Создать каталог</button>
+
+        <button type="button" class="btn btn-primary btn-upload"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;Загрузить</button>
+
+        <button type="button" class="btn btn-primary btn-paste" disabled="disabled"><span class="glyphicon glyphicon-paste" aria-hidden="true"></span>&nbsp;Вставить</button>
+    </div>
+<p>
+{% for p in path %}
+    <a href="#{{ p.path }}">{{ p.name }}</a>/
+{% endfor %}
+</p>
+{% if (data.dirs.length+data.files.length) > 0 %}
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="col-icon"></th>
+            <th>Имя</th>
+            <th class="col-size text-right">Размер</th>
+            <th class="col-buttons"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for dir in data.dirs %}
+        <tr>
+            <td><span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span></td>
+            <td><a href="#{{ dir.fullname }}">{{ dir.name }}</a></td>
+            <td></td>
+            <td class="text-right">
+
+                    <button type="button" class="btn btn-xs btn-primary btn-pack" title="Упаковать" data-fullname="{{ dir.fullname }}"  data-name="{{ dir.name }}">
+                    <span class="glyphicon glyphicon-compressed" aria-hidden="true"></span>
+                    </button>
+
+                    <button type="button" class="btn btn btn-success btn-xs btn-copy" title="Копировать" data-fullname="{{ dir.fullname }}"  data-name="{{ dir.name }}">
+                    <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-xs btn-cut" title="Вырезать" data-fullname="{{ dir.fullname }}"  data-name="{{ dir.name }}">
+                    <span class="glyphicon glyphicon-scissors" aria-hidden="true"></span>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-xs btn-delete" title="Удалить" data-fullname="{{ dir.fullname }}" data-name="{{ dir.name }}">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+            </td>
+        </tr>
+        {% endfor %}
+        {% for file in data.files %}
+        <tr>
+            <td>
+            {% if file.mime == 'application/zip' %}
+                <span class="glyphicon glyphicon-compressed" aria-hidden="true"></span>
+            {% else %}
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+            {% endif %}
+            </td>
+            <td>
+                {% if file.url %}
+                <a target="_blank" href="{{ file.url }}">{{ file.name }}</a>
+                {% else %}
+                <a href="#download{{ file.fullname }}">{{ file.name }}</a>
+                {% endif %}
+
+            </td>
+            <td class="text-right">{{ file.s_size }}</td>
+            <td class="text-right">
+                {% if file.mime == 'application/zip' %}
+                    <button type="button" class="btn btn-xs btn-primary btn-unpack" title="Распаковать" data-fullname="{{ file.fullname }}"  data-name="{{ file.name }}">
+                    <span class="glyphicon glyphicon-open-file" aria-hidden="true"></span>
+                    </button>
+                {% endif %}
+
+                    <button type="button" class="btn btn btn-success btn-xs btn-copy" title="Копировать" data-fullname="{{ file.fullname }}"  data-name="{{ file.name }}">
+                    <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-xs btn-cut" title="Вырезать" data-fullname="{{ file.fullname }}"  data-name="{{ file.name }}">
+                    <span class="glyphicon glyphicon-scissors" aria-hidden="true"></span>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-xs btn-delete" title="Удалить" data-fullname="{{ file.fullname }}"  data-name="{{ file.name }}">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>
+    Директория пустая
+</p>
+{% endif %}
